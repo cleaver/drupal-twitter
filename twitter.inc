@@ -26,7 +26,7 @@ function twitter_connect($account) {
  * Saves a TwitterUser object to {twitter_account}
  */
 function twitter_account_save($twitter_user, $save_auth = FALSE, $account = NULL) {
-  $values = (array)$twitter_user;
+  $values = (array) $twitter_user;
   $values['twitter_uid'] = $values['id'];
 
   if ($save_auth) {
@@ -55,7 +55,7 @@ function twitter_account_load($id) {
   $account->uid = $values['uid'];
   $account->import = $values['import'];
   $account->is_global = $values['is_global'];
-  
+
   return $account;
 }
 
@@ -66,14 +66,14 @@ function twitter_status_save($status) {
   $status->twitter_id = $status->id;
   $status->screen_name = $status->user->screen_name;
   $status->created_time = strtotime($status->created_at);
-  
+
   if (db_result(db_query("SELECT 1 FROM {twitter} WHERE twitter_id = %d", $status->id))) {
     drupal_write_record('twitter', $status, array('twitter_id'));
   }
   else {
     drupal_write_record('twitter', $status);
   }
-  
+
 }
 
 /**
@@ -93,7 +93,7 @@ function twitter_fetch_user_timeline($id) {
   $account = twitter_account_load($id);
 
   $since = db_result(db_query("SELECT MAX(twitter_id) FROM {twitter} WHERE screen_name = '%s'", $account->screen_name));
-  
+
   $twitter = twitter_connect($account);
 
   $params = array();
