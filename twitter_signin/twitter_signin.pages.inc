@@ -1,14 +1,18 @@
 <?php
 
-function twitter_signin_admin_settings() {
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function twitter_signin_admin_settings($form, &$form_state) {
   $form = array();
 
   $img_path = drupal_get_path('module', 'twitter_signin') . '/images';
-  $results = file_scan_directory($img_path, '.png');
+  $results = file_scan_directory($img_path, '/.png/');
 
   $options = array();
   foreach ($results as $image) {
-    $options[$image->basename] = theme('image', $image->filename);
+    $options[$image->basename] = theme('image', array('path' => $image->filename));
   }
 
   $form['twitter_signin_button'] = array(

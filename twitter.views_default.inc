@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
 function twitter_views_default_views() {
   $view = new view;
   $view->name = 'tweets';

@@ -6,10 +6,10 @@
  */
 
 /**
- * Implementation of hook_menu().
+ * Implements hook_menu().
  */
 function twitter_post_menu() {
-  $items['admin/settings/twitter/post'] = array(
+  $items['admin/config/twitter/post'] = array(
     'title' => 'Post',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('twitter_post_admin_settings'),
@@ -23,7 +23,7 @@ function twitter_post_menu() {
 }
 
 /**
- * Implementation of hook_form_alter().
+ * Implements hook_form_alter().
  */
 function twitter_post_form_alter(&$form, $form_state, $form_id) {
   // Alter any node forms.
@@ -108,7 +108,7 @@ function twitter_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
  *   A Drupal user object.
  */
 function twitter_post_form($account = NULL) {
-  drupal_add_js(drupal_get_path('module', 'twitter') . '/twitter.js', 'module');
+  drupal_add_js(drupal_get_path('module', 'twitter') . '/twitter.js');
 
   if (empty($account)) {
     global $user;

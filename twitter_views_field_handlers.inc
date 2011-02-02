@@ -60,7 +60,7 @@ class twitter_views_handler_field_xss extends views_handler_field {
 class twitter_views_handler_field_profile_image extends views_handler_field {
   function render($values) {
     $value = $values->{$this->field_alias};
-    return theme('image', $value, '', '', array(), FALSE);
+    return theme('image', array('path' => $value, 'width' => '', 'height' => '', 'alt' => array(), 'title' => FALSE));
   }
 }
 

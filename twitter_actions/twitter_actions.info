@@ -1,5 +1,8 @@
 name = Twitter actions
 description = Exposes Drupal actions to send Twitter messages.
-core = 6.x
+core = 7.x
 dependencies[] = twitter
 dependencies[] = oauth
+
+files[] = twitter_actions.module
+files[] = twitter_actions.rules.inc

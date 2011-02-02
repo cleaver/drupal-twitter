@@ -5,7 +5,7 @@
  */
 
 /**
- * Implementation of hook_rules_action_info_alter().
+ * Implements hook_rules_action_info_alter().
  *
  * Actions of type system are not supported, so rules won't make use of it automatically. So
  * we have to provide some information about it to make it work.

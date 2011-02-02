@@ -1,5 +1,7 @@
 name = Twitter Post
 description = Enables posting to twitter
-core = 6.x
+core = 7.x
 dependencies[] = twitter
 dependencies[] = oauth
+files[] = twitter_post.module
+files[] = twitter_post.pages.inc

@@ -3,7 +3,7 @@
 /**
  *
  */
-function twitter_admin_form() {
+function twitter_admin_form($form, &$form_state) {
   $form = array();
 
   $form['oauth'] = array(
@@ -56,6 +56,10 @@ function twitter_admin_form() {
   return system_settings_form($form);
 }
 
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
 function twitter_user_settings($account) {
   module_load_include('inc', 'twitter');
 
@@ -72,7 +76,11 @@ function twitter_user_settings($account) {
   return $output;
 }
 
-function twitter_account_list_form($form_state, $twitter_accounts = array()) {
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function twitter_account_list_form($form, $form_state, $twitter_accounts = array()) {
   $form['#tree'] = TRUE;
   $form['accounts'] = array();
 
@@ -110,7 +118,7 @@ function _twitter_account_list_row($account) {
 
   $form['image'] = array(
     '#type' => 'markup',
-    '#value' => theme('image', $account->profile_image_url, '', '', array(), FALSE),
+    '#value' => theme('image', array('path' => $account->profile_image_url, 'width' => '', 'height' => '', 'alt' => array(), 'title' => FALSE)),
   );
 
   $form['visible_name'] = array(
@@ -143,7 +151,12 @@ function _twitter_account_list_row($account) {
   return $form;
 }
 
-function theme_twitter_account_list_form($form) {
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function theme_twitter_account_list_form($variables) {
+  $form = $variables['form'];
 
   if (user_access('import own tweets')) {
     $header = array('', t('Name'), t('Description'), t('Private'), t('Import'), t('Delete'));
@@ -188,11 +201,15 @@ function theme_twitter_account_list_form($form) {
     $rows[] = $row;
   }
 
-  $output = theme('table', $header, $rows);
-  $output .= drupal_render($form);
+  $output = theme('table', array('header' => $header, 'rows' => $rows));
+  $output .= drupal_render_children($form);
   return $output;
 }
 
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
 function twitter_account_list_form_submit($form, &$form_state) {
   $accounts = $form_state['values']['accounts'];
   foreach ($accounts as $account) {
@@ -205,7 +222,11 @@ function twitter_account_list_form_submit($form, &$form_state) {
   }
 }
 
-function twitter_user_make_global($form_state, $account, $twitter_uid) {
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function twitter_user_make_global($form, $form_state, $account, $twitter_uid) {
   module_load_include('inc', 'twitter');
 
   $twitter_account = twitter_account_load($twitter_uid);
@@ -234,13 +255,28 @@ function twitter_user_make_global($form_state, $account, $twitter_uid) {
   return confirm_form($form, $text, 'user/' . $account->uid . '/edit/twitter', $description);
 }
 
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
 function twitter_user_make_global_submit($form, &$form_state) {
-  db_query("UPDATE {twitter_account} SET is_global = (1 - is_global) WHERE twitter_uid = %d", $form_state['values']['twitter_uid']);
+  // TODO Please review the conversion of this statement to the D7 database API syntax.
+  /* db_query("UPDATE {twitter_account} SET is_global = (1 - is_global) WHERE twitter_uid = %d", $form_state['values']['twitter_uid']) */
+  db_update('twitter_account')
+  ->fields(array(
+    'is_global' =>  (1 - is_global),
+  ))
+  ->condition('twitter_uid', $form_state['values']['twitter_uid'])
+  ->execute();
 
   $form_state['redirect'] = 'user/' . $form_state['values']['uid'] . '/edit/twitter';
 }
 
-function twitter_account_form($form_state, $account = NULL) {
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function twitter_account_form($form, $form_state, $account = NULL) {
   if (empty($account)) {
     global $user;
     $account = $user;
@@ -283,6 +319,10 @@ function twitter_account_form($form_state, $account = NULL) {
   return $form;
 }
 
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
 function twitter_account_form_validate($form, &$form_state) {
   module_load_include('lib.php', 'twitter');
   module_load_include('inc', 'twitter');
@@ -306,6 +346,10 @@ function twitter_account_form_validate($form, &$form_state) {
   }
 }
 
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
 function twitter_account_form_submit($form, &$form_state) {
   module_load_include('inc', 'twitter');
 
@@ -316,6 +360,10 @@ function twitter_account_form_submit($form, &$form_state) {
   }
 }
 
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
 function twitter_account_oauth_validate($form, &$form_state) {
   module_load_include('lib.php', 'oauth');
   module_load_include('lib.php', 'twitter');
@@ -331,7 +379,11 @@ function twitter_account_oauth_validate($form, &$form_state) {
 }
 
 
-function twitter_oauth_callback(&$form_state) {
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
+function twitter_oauth_callback($form, &$form_state) {
   $form['#post']['oauth_token'] = $_GET['oauth_token'];
 
   $form['oauth_token'] = array(
@@ -342,6 +394,10 @@ function twitter_oauth_callback(&$form_state) {
   return $form;
 }
 
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
 function twitter_oauth_callback_validate($form, &$form_state) {
   $key = variable_get('twitter_consumer_key', '');
   $secret = variable_get('twitter_consumer_secret', '');
@@ -367,6 +423,10 @@ function twitter_oauth_callback_validate($form, &$form_state) {
   $form_state['twitter_oauth']['response'] = $response;
 }
 
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
 function twitter_oauth_callback_submit(&$form, &$form_state) {
   $key = variable_get('twitter_consumer_key', '');
   $secret = variable_get('twitter_consumer_secret', '');
