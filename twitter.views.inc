@@ -13,7 +13,7 @@
  */
 
 /**
- * Implementation of hook_views_handlers()
+ * Implements hook_views_handlers().
  */
 function twitter_views_handlers() {
   return array(
@@ -32,7 +32,7 @@ function twitter_views_handlers() {
 
 
 /**
- * Implementation of hook_views_data()
+ * Implements hook_views_data().
  */
 function twitter_views_data() {
   // Basic table information.
@@ -298,6 +298,10 @@ function twitter_views_data() {
 }
 
 
+/**
+ * @todo Please document this function.
+ * @see http://drupal.org/node/1354
+ */
 function twitter_views_data_alter(&$data) {
   $data['users']['table']['join']['twitter'] = array(
     'left_table' => 'twitter_account',
