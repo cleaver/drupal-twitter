@@ -42,11 +42,11 @@ function twitter_actions_set_status_action_form($context = array()) {
   );
 
   $form['screen_name'] = array(
-    '#type'          => 'textfield',
-    '#title'         => t('Twitter account name'),
+    '#type' => 'textfield',
+    '#title' => t('Twitter account name'),
     '#default_value' => $context['screen_name'],
-    '#size'          => 25,
-    '#required'      => TRUE,
+    '#size' => 25,
+    '#required' => TRUE,
   );
 
   $form['message'] = array(
@@ -56,7 +56,7 @@ function twitter_actions_set_status_action_form($context = array()) {
     '#cols' => '80',
     '#rows' => '3',
     '#description' => t('The message that should be sent. You may include the following variables: %site_name, %username, %node_url, %node_type, %title, %teaser, %body, %tinyurl. Not all variables will be available in all contexts.'),
-    '#required'      => TRUE,
+    '#required' => TRUE,
   );
   return $form;
 }
@@ -78,7 +78,7 @@ function twitter_actions_set_status_action_submit($form, $form_state) {
   $params = array(
     'twitter_uid' => $twitter_uid,
     'screen_name' => $form_values['screen_name'],
-    'message'   => $form_values['message'],
+    'message' => $form_values['message'],
   );
   return $params;
 }
@@ -99,7 +99,7 @@ function twitter_actions_set_status_action($object, $context) {
       // in $context.
       $node = $context['node'];
       break;
-    // The comment hook provides nid, in $context.
+      // The comment hook provides nid, in $context.
     case 'comment':
       $comment = $context['comment'];
       $node = node_load($comment->nid);
@@ -127,7 +127,7 @@ function twitter_actions_set_status_action($object, $context) {
         '%vocabulary_name' => $vocabulary->name,
         '%vocabulary_description' => $vocabulary->description,
         '%vocabulary_id' => $vocabulary->vid,
-        )
+      )
       );
       break;
     default:
@@ -149,20 +149,20 @@ function twitter_actions_set_status_action($object, $context) {
   // Node-based variable translation is only available if we have a node.
   if (isset($node) && is_object($node)) {
     $variables = array_merge($variables, array(
-        '%uid' => $node->uid,
-        '%node_url' => url('node/'. $node->nid, array('absolute' => TRUE)),
-        '%node_type' => node_get_types('name', $node),
-        '%title' => $node->title,
-        '%teaser' => $node->teaser,
-        '%body' => $node->body
-      )
+      '%uid' => $node->uid,
+      '%node_url' => url('node/' . $node->nid, array('absolute' => TRUE)),
+      '%node_type' => node_get_types('name', $node),
+      '%title' => $node->title,
+      '%teaser' => $node->teaser,
+      '%body' => $node->body,
+    )
     );
   }
 
   // Only make a tinyurl if it was asked for.
   if (strstr($context['message'], '%tinyurl') !== FALSE) {
     $variables = array_merge($variables, array(
-      '%tinyurl' => twitter_shorten_url(url('node/'. $node->nid, array('absolute' => TRUE))),
+      '%tinyurl' => twitter_shorten_url(url('node/' . $node->nid, array('absolute' => TRUE))),
     ));
   }
 

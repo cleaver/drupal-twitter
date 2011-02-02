@@ -20,5 +20,5 @@ function twitter_post_admin_settings() {
     '#default_value' => variable_get('twitter_post_default_format', 'New post: !title !tinyurl'),
   );
 
-  return system_settings_form($form);  
+  return system_settings_form($form);
 }

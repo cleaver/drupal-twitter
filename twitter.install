@@ -15,38 +15,38 @@ function twitter_schema() {
         'precision' => 20,
         'scale' => 0,
         'not null' => TRUE,
-        'default' => 0
+        'default' => 0,
       ),
       'screen_name' => array(
         'description' => t("Screen Name of the {twitter_account} user."),
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
-        'default' => ''
+        'default' => '',
       ),
       'created_at' => array(
         'description' => t("Date and time the {twitter} post was created."),
         'type' => 'varchar',
         'length' => 64,
         'not null' => TRUE,
-        'default' => ''
+        'default' => '',
       ),
       'created_time' => array(
         'description' => t("A duplicate of {twitter}.created_at in UNIX timestamp format."),
         'type' => 'int',
-        'not null' => TRUE
+        'not null' => TRUE,
       ),
       'text' => array(
         'description' => t("The text of the {twitter} post."),
         'type' => 'varchar',
         'length' => 255,
-        'not null' => FALSE
+        'not null' => FALSE,
       ),
       'source' => array(
         'description' => t("The application that created the {twitter} post."),
         'type' => 'varchar',
         'length' => 255,
-        'not null' => FALSE
+        'not null' => FALSE,
       ),
       'in_reply_to_status_id' => array(
         'description' => t("Unique identifier of a status this {twitter} post was replying to."),
@@ -75,8 +75,8 @@ function twitter_schema() {
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'default' => 0
-       ),
+        'default' => 0,
+      ),
     ),
     'indexes' => array('screen_name' => array('screen_name')),
     'primary key' => array('twitter_id'),
@@ -90,8 +90,9 @@ function twitter_schema() {
         'type' => 'numeric',
         'unsigned' => TRUE,
         'precision' => 20,
-        'scale' => 0,        'not null' => TRUE,
-        'default' => 0
+        'scale' => 0,
+        'not null' => TRUE,
+        'default' => 0,
       ),
       'uid' => array(
         'description' => t("The {users}.uid of the owner of this account"),
@@ -108,12 +109,12 @@ function twitter_schema() {
       'screen_name' => array(
         'description' => t("The unique login name of the {twitter_account} user."),
         'type' => 'varchar',
-        'length' => 255
+        'length' => 255,
       ),
       'password' => array(
         'description' => t("The password for the Twitter account."),
         'type' => 'varchar',
-        'length' => 64
+        'length' => 64,
       ),
       'oauth_token' => array(
         'description' => t('The token_key for oauth-based access.'),
@@ -130,58 +131,58 @@ function twitter_schema() {
         'type' => 'varchar',
         'length' => 64,
         'not null' => TRUE,
-        'default' => ''
+        'default' => '',
       ),
       'description' => array(
         'description' => t("The description/biography associated with the {twitter_account}."),
         'type' => 'varchar',
-        'length' => 255
+        'length' => 255,
       ),
       'location' => array(
         'description' => t("The location of the {twitter_account}'s owner."),
         'type' => 'varchar',
-        'length' => 255
+        'length' => 255,
       ),
       'followers_count' => array(
         'description' => t("The number of users following this {twitter_account}."),
         'type' => 'int',
         'not null' => TRUE,
-        'default' => 0
+        'default' => 0,
       ),
       'friends_count' => array(
         'description' => t("The number of users this {twitter_account} is following."),
         'type' => 'int',
         'not null' => TRUE,
-        'default' => 0
-      ),      
+        'default' => 0,
+      ),
       'statuses_count' => array(
         'description' => t("The total number of status updates performed by a user, excluding direct messages sent."),
         'type' => 'int',
         'not null' => TRUE,
-        'default' => 0
-      ),      
+        'default' => 0,
+      ),
       'favourites_count' => array(
         'description' => t("The  number of statuses a user has marked as favorite."),
         'type' => 'int',
         'not null' => TRUE,
-        'default' => 0
-      ),      
+        'default' => 0,
+      ),
       'url' => array(
         'description' => t("The url of the {twitter_account}'s home page."),
         'type' => 'varchar',
-        'length' => 255
+        'length' => 255,
       ),
       'profile_image_url' => array(
         'description' => t("The url of the {twitter_account}'s profile image."),
         'type' => 'varchar',
-        'length' => 255
+        'length' => 255,
       ),
       'protected' => array(
         'description' => t("Boolean flag indicating whether the {twitter_account}'s posts are publicly accessible."),
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'default' => 0
+        'default' => 0,
       ),
       'profile_background_color' => array(
         'description' => t("hex RGB value for a user's background color"),
@@ -221,45 +222,45 @@ function twitter_schema() {
       'profile_background_image_url' => array(
         'description' => t("The url of the {twitter_account}'s profile image."),
         'type' => 'varchar',
-        'length' => 255
+        'length' => 255,
       ),
       'profile_background_tile' => array(
         'description' => t("Boolean indicating if a user's background is tiled."),
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'default' => 1
+        'default' => 1,
       ),
       'verified' => array(
         'description' => t("Indicates if a user is verified."),
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'default' => 1
+        'default' => 1,
       ),
       'created_at' => array(
         'description' => t("Date and time the {twitter_account} was created."),
         'type' => 'varchar',
         'length' => 64,
         'not null' => TRUE,
-        'default' => ''
+        'default' => '',
       ),
       'created_time' => array(
         'description' => t("A duplicate of {twitter_account}.created_at in UNIX timestamp format."),
         'type' => 'int',
-        'not null' => TRUE
+        'not null' => TRUE,
       ),
       'utc_offset' => array(
         'description' => t("A duplicate of {twitter_account}.created_at in UNIX timestamp format."),
         'type' => 'int',
-        'not null' => TRUE
+        'not null' => TRUE,
       ),
       'import' => array(
         'description' => t("Boolean flag indicating whether the {twitter_user}'s posts should be pulled in by the site."),
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'default' => 1
+        'default' => 1,
       ),
       'last_refresh' => array(
         'description' => t("A UNIX timestamp marking the date Twitter statuses were last fetched on."),
@@ -272,7 +273,7 @@ function twitter_schema() {
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'default' => 0
+        'default' => 0,
       ),
     ),
     'indexes' => array('screen_name' => array('screen_name')),
@@ -317,7 +318,7 @@ function twitter_update_6001() {
 
   $attributes = array(
     'description' => t("The location of the {twitter_account}'s owner."),
-    'length' => 255
+    'length' => 255,
   );
   db_add_column($ret, 'twitter_account', 'location', 'varchar(255)', $attributes);
 
@@ -325,7 +326,7 @@ function twitter_update_6001() {
     'description' => t("The number of users following this {twitter_account}."),
     'unsigned' => TRUE,
     'not null' => TRUE,
-    'default' => 0
+    'default' => 0,
   );
   db_add_column($ret, 'twitter_account', 'followers_count', 'int', $attributes);
 
@@ -349,17 +350,22 @@ function twitter_update_6002() {
 function twitter_update_6003() {
   $ret = array();
   db_drop_primary_key($ret, 'twitter');
-  
+
   db_change_field($ret, 'twitter', 'twitter_id', 'twitter_id',
-    array('description' => t("Unique identifier for each {twitter} post."),
-          'type' => 'int', 'size' => 'big', 'unsigned' => 'true', 'not null' => TRUE),
+    array(
+      'description' => t("Unique identifier for each {twitter} post."),
+      'type' => 'int',
+      'size' => 'big',
+      'unsigned' => 'true',
+      'not null' => TRUE,
+    ),
     array('primary key' => array('twitter_id')));
 
   return $ret;
 }
 
 /**
- * Add NOT NULL constraint and DEFAULT value to the screen_name field of the 
+ * Add NOT NULL constraint and DEFAULT value to the screen_name field of the
  * twitter and twitter_user tables per updated schema definition.
  *
  * See http://drupal.org/node/336048 and http://drupal.org/node/430442
@@ -399,12 +405,17 @@ function twitter_update_6005() {
   $ret[] = update_sql("DELETE FROM {twitter} WHERE twitter_id = 2147483647");
 
   db_drop_primary_key($ret, 'twitter');
-  
+
   db_change_field($ret, 'twitter', 'twitter_id', 'twitter_id',
-    array('description' => t("Unique identifier for each {twitter} post."),
-          'type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+    array(
+      'description' => t("Unique identifier for each {twitter} post."),
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => TRUE,
+      'default' => '',
+    ),
     array('primary key' => array('twitter_id')));
-  
+
   return $ret;
 }
 
@@ -422,7 +433,7 @@ function twitter_update_6006() {
   $ret = array();
 
   db_drop_primary_key($ret, 'twitter');
-  
+
   db_change_field($ret, 'twitter', 'twitter_id', 'twitter_id',
     array(
       'description' => t("Unique identifier for each {twitter} post."),
@@ -431,11 +442,11 @@ function twitter_update_6006() {
       'precision' => 20,
       'scale' => 0,
       'not null' => TRUE,
-      'default' => 0
+      'default' => 0,
     ),
     array('primary key' => array('twitter_id'))
-  );
-  
+                 );
+
   db_add_field($ret, 'twitter', 'in_reply_to_status_id',
     array(
       'description' => t("Unique identifier of a status this {twitter} post was replying to."),
@@ -445,7 +456,7 @@ function twitter_update_6006() {
       'unsigned' => TRUE,
       'not null' => FALSE,
     )
-  );
+              );
 
   db_add_field($ret, 'twitter', 'in_reply_to_user_id',
     array(
@@ -456,7 +467,7 @@ function twitter_update_6006() {
       'unsigned' => TRUE,
       'not null' => FALSE,
     )
-  );
+              );
 
   db_add_field($ret, 'twitter', 'in_reply_to_screen_name',
     array(
@@ -465,7 +476,7 @@ function twitter_update_6006() {
       'length' => 255,
       'not null' => FALSE,
     )
-  );
+              );
 
   db_add_field($ret, 'twitter', 'truncated',
     array(
@@ -475,8 +486,8 @@ function twitter_update_6006() {
       'not null' => TRUE,
       'default' => 0,
     )
-  );
-  
+              );
+
   db_drop_primary_key($ret, 'twitter_account');
 
   db_change_field($ret, 'twitter_account', 'twitter_uid', 'twitter_uid',
@@ -487,12 +498,12 @@ function twitter_update_6006() {
       'precision' => 20,
       'scale' => 0,
       'not null' => TRUE,
-      'default' => 0
+      'default' => 0,
     ),
     array('primary key' => array('twitter_uid'))
-  );
+                 );
 
-       
+
   return $ret;
 }
 
@@ -508,176 +519,176 @@ function twitter_update_6007() {
       'not null' => TRUE,
       'default' => 0,
     )
-  );
+                 );
   return $ret;
 }
 
 /**
- * Update from 2.x to 3.x 
+ * Update from 2.x to 3.x
  */
 function twitter_update_6300() {
   $ret = array();
 
   // add additional fields to {twitter_account}
   db_add_field($ret, 'twitter_account', 'uid',
-               array(
-                 'description' => t("The {users}.uid of the owner of this account"),
-                 'type' => 'int',
-                 'unsigned' => TRUE,
-                 'size' => 'big',
-                 'not null' => TRUE,
-               ));
+    array(
+      'description' => t("The {users}.uid of the owner of this account"),
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'size' => 'big',
+      'not null' => TRUE,
+    ));
 
   db_add_field($ret, 'twitter_account', 'host',
-               array(
-                 'description' => t('The host for this account can be a laconi.ca instance'),
-                 'type' => 'varchar',
-                 'length' => 255,
-               ));
+    array(
+      'description' => t('The host for this account can be a laconi.ca instance'),
+      'type' => 'varchar',
+      'length' => 255,
+    ));
   db_add_field($ret, 'twitter_account', 'password',
-               array(
-                 'description' => t("The password for the Twitter account."),
-                 'type' => 'varchar',
-                 'length' => 64
-               ));
+    array(
+      'description' => t("The password for the Twitter account."),
+      'type' => 'varchar',
+      'length' => 64,
+    ));
   db_add_field($ret, 'twitter_account', 'oauth_token',
-               array(
-                 'description' => t('The token_key for oauth-based access.'),
-                 'type' => 'varchar',
-                 'length' => 64,
-               ));
+    array(
+      'description' => t('The token_key for oauth-based access.'),
+      'type' => 'varchar',
+      'length' => 64,
+    ));
   db_add_field($ret, 'twitter_account', 'oauth_token_secret',
-               array(
-                 'description' => t('The token_secret for oauth-based access.'),
-                 'type' => 'varchar',
-                 'length' => 64,
-               ));
+    array(
+      'description' => t('The token_secret for oauth-based access.'),
+      'type' => 'varchar',
+      'length' => 64,
+    ));
   db_add_field($ret, 'twitter_account', 'friends_count',
-               array(
-                 'description' => t("The number of users this {twitter_account} is following."),
-                 'type' => 'int',
-                 'not null' => TRUE,
-                 'default' => 0
-               ));
+    array(
+      'description' => t("The number of users this {twitter_account} is following."),
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+    ));
   db_add_field($ret, 'twitter_account', 'statuses_count',
-               array(
-                 'description' => t("The total number of status updates performed by a user, excluding direct messages sent."),
-                 'type' => 'int',
-                 'not null' => TRUE,
-                 'default' => 0
-               ));
+    array(
+      'description' => t("The total number of status updates performed by a user, excluding direct messages sent."),
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+    ));
   db_add_field($ret, 'twitter_account', 'favourites_count',
-               array(
-                 'description' => t("The  number of statuses a user has marked as favorite."),
-                 'type' => 'int',
-                 'not null' => TRUE,
-                 'default' => 0
-               ));
+    array(
+      'description' => t("The  number of statuses a user has marked as favorite."),
+      'type' => 'int',
+      'not null' => TRUE,
+      'default' => 0,
+    ));
   db_add_field($ret, 'twitter_account', 'profile_background_color',
-               array(
-                 'description' => t("hex RGB value for a user's background color"),
-                 'type' => 'varchar',
-                 'length' => 6,
-                 'not null' => TRUE,
-                 'default' => '',
-               ));
+    array(
+      'description' => t("hex RGB value for a user's background color"),
+      'type' => 'varchar',
+      'length' => 6,
+      'not null' => TRUE,
+      'default' => '',
+    ));
   db_add_field($ret, 'twitter_account', 'profile_text_color',
-               array(
-                 'description' => t("hex RGB value for a user's text color"),
-                 'type' => 'varchar',
-                 'length' => 6,
-                 'not null' => TRUE,
-                 'default' => '',
-               ));
+    array(
+      'description' => t("hex RGB value for a user's text color"),
+      'type' => 'varchar',
+      'length' => 6,
+      'not null' => TRUE,
+      'default' => '',
+    ));
   db_add_field($ret, 'twitter_account', 'profile_link_color',
-               array(
-                 'description' => t("hex RGB value for a user's link color"),
-                 'type' => 'varchar',
-                 'length' => 6,
-                 'not null' => TRUE,
-                 'default' => '',
-               ));
+    array(
+      'description' => t("hex RGB value for a user's link color"),
+      'type' => 'varchar',
+      'length' => 6,
+      'not null' => TRUE,
+      'default' => '',
+    ));
   db_add_field($ret, 'twitter_account', 'profile_sidebar_fill_color',
-               array(
-                 'description' => t("hex RGB value for a user's sidebar color"),
-                 'type' => 'varchar',
-                 'length' => 6,
-                 'not null' => TRUE,
-                 'default' => '',
-               ));
+    array(
+      'description' => t("hex RGB value for a user's sidebar color"),
+      'type' => 'varchar',
+      'length' => 6,
+      'not null' => TRUE,
+      'default' => '',
+    ));
   db_add_field($ret, 'twitter_account', 'profile_sidebar_border_color',
-               array(
-                 'description' => t("hex RGB value for a user's border color"),
-                 'type' => 'varchar',
-                 'length' => 6,
-                 'not null' => TRUE,
-                 'default' => '',
-               ));
+    array(
+      'description' => t("hex RGB value for a user's border color"),
+      'type' => 'varchar',
+      'length' => 6,
+      'not null' => TRUE,
+      'default' => '',
+    ));
   db_add_field($ret, 'twitter_account', 'profile_background_image_url',
-               array(
-                 'description' => t("The url of the {twitter_account}'s profile image."),
-                 'type' => 'varchar',
-                 'length' => 255
-               ));
+    array(
+      'description' => t("The url of the {twitter_account}'s profile image."),
+      'type' => 'varchar',
+      'length' => 255,
+    ));
   db_add_field($ret, 'twitter_account', 'profile_background_tile',
-               array(
-                 'description' => t("Boolean indicating if a user's background is tiled."),
-                 'type' => 'int',
-                 'unsigned' => TRUE,
-                 'not null' => TRUE,
-                 'default' => 1
-               ));
+    array(
+      'description' => t("Boolean indicating if a user's background is tiled."),
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 1,
+    ));
   db_add_field($ret, 'twitter_account', 'verified',
-               array(
-                 'description' => t("Indicates if a user is verified."),
-                 'type' => 'int',
-                 'unsigned' => TRUE,
-                 'not null' => TRUE,
-                 'default' => 1
-               ));
+    array(
+      'description' => t("Indicates if a user is verified."),
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 1,
+    ));
   db_add_field($ret, 'twitter_account', 'created_at',
-               array(
-                 'description' => t("Date and time the {twitter_account} was created."),
-                 'type' => 'varchar',
-                 'length' => 64,
-                 'not null' => TRUE,
-                 'default' => ''
-               ));
+    array(
+      'description' => t("Date and time the {twitter_account} was created."),
+      'type' => 'varchar',
+      'length' => 64,
+      'not null' => TRUE,
+      'default' => '',
+    ));
   db_add_field($ret, 'twitter_account', 'created_time',
-               array(
-                 'description' => t("A duplicate of {twitter_account}.created_at in UNIX timestamp format."),
-                 'type' => 'int',
-                 'not null' => TRUE
-               ));
+    array(
+      'description' => t("A duplicate of {twitter_account}.created_at in UNIX timestamp format."),
+      'type' => 'int',
+      'not null' => TRUE,
+    ));
   db_add_field($ret, 'twitter_account', 'utc_offset',
-               array(
-                 'description' => t("A duplicate of {twitter_account}.created_at in UNIX timestamp format."),
-                 'type' => 'int',
-                 'not null' => TRUE
-               ));
+    array(
+      'description' => t("A duplicate of {twitter_account}.created_at in UNIX timestamp format."),
+      'type' => 'int',
+      'not null' => TRUE,
+    ));
   db_add_field($ret, 'twitter_account', 'import',
-               array(
-                 'description' => t("Boolean flag indicating whether the {twitter_user}'s posts should be pulled in by the site."),
-                 'type' => 'int',
-                 'unsigned' => TRUE,
-                 'not null' => TRUE,
-                 'default' => 1
-               ));
+    array(
+      'description' => t("Boolean flag indicating whether the {twitter_user}'s posts should be pulled in by the site."),
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 1,
+    ));
   db_add_field($ret, 'twitter_account', 'is_global',
-               array(
-                 'description' => t("Boolean flag indicating if this account is available for global use"),
-                 'type' => 'int',
-                 'unsigned' => TRUE,
-                 'not null' => TRUE,
-                 'default' => 0
-               ));
-               
-               
+    array(
+      'description' => t("Boolean flag indicating if this account is available for global use"),
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 0,
+    ));
+
+
   if (db_table_exists('twitter_user')) {
     $result = db_query("SELECT * FROM {twitter_user} ORDER BY uid DESC");
     while ($row = db_fetch_array($result)) {
       db_query("UPDATE {twitter_account} SET uid=%d, password='%s', import=%d WHERE screen_name='%s'",
-               $row['uid'], $row['password'], $row['import'], $row['screen_name']);
+        $row['uid'], $row['password'], $row['import'], $row['screen_name']);
     }
 
     db_drop_table($ret, 'twitter_user');

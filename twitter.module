@@ -15,19 +15,19 @@ function twitter_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'twitter.pages.inc',
   );
-  
+
   $items['admin/settings/twitter'] = array(
     'title' => 'Twitter setup',
     'description' => 'Twitter module settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('twitter_admin_form'),
     'access arguments' => array('administer site configuration'),
-    'file' => 'twitter.pages.inc'
+    'file' => 'twitter.pages.inc',
   );
-  
+
   $items['admin/settings/twitter/default'] = array(
     'title' => 'Twitter',
-    'type' => MENU_DEFAULT_LOCAL_TASK
+    'type' => MENU_DEFAULT_LOCAL_TASK,
   );
 
   $items['user/%user_category/edit/twitter'] = array(
@@ -49,7 +49,7 @@ function twitter_menu() {
     'file' => 'twitter.pages.inc',
     'type' => MENU_CALLBACK,
   );
-  
+
   return $items;
 }
 
@@ -80,7 +80,7 @@ function twitter_theme() {
   return array(
     'twitter_account_list_form' => array(
       'arguments' => array('form' => NULL),
-    )
+    ),
   );
 }
 
@@ -184,7 +184,7 @@ function twitter_filter_tips($delta, $format, $long = FALSE) {
 }
 
 /**
- * This helper function converts Twitter-style @usernames and #hashtags into 
+ * This helper function converts Twitter-style @usernames and #hashtags into
  * actual links.
  */
 function twitter_link_filter($text, $prefix = '@', $destination = 'http://twitter.com/') {
@@ -198,7 +198,7 @@ function twitter_link_filter($text, $prefix = '@', $destination = 'http://twitte
     '<a href="' . $destination . '${1}">' . $prefix . '${1}</a>',
     '${1}<a href="' . $destination . '${2}">' . $prefix . '${2}</a>',
   );
-  return preg_replace($matches, $replacements, $text); 
+  return preg_replace($matches, $replacements, $text);
 }
 
 /**
@@ -220,12 +220,12 @@ function twitter_get_user_accounts($uid) {
  */
 function twitter_twitter_accounts($account) {
   module_load_include('inc', 'twitter');
-  
+
   $twitter_accounts = array();
-  
+
   $sql = "SELECT twitter_uid FROM {twitter_account} WHERE uid = %d";
   if (user_access('use global twitter account')) {
-    $sql.= " OR is_global=1";
+    $sql .= " OR is_global=1";
   }
   $results = db_query($sql, $account->uid);
 
@@ -240,7 +240,7 @@ function _twitter_use_oauth() {
   if (!module_exists('oauth')) {
     return FALSE;
   }
-  
+
   return (variable_get('twitter_consumer_key', '') && variable_get('twitter_consumer_secret', ''));
 }
 

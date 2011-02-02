@@ -11,8 +11,7 @@ function twitter_signin_menu() {
     'title' => 'Twitter Redirect',
     'page callback' => 'twitter_signin_redirect',
     'access callback' => TRUE,
-    'type' => MENU_CALLBACK
-    
+    'type' => MENU_CALLBACK,
   );
 
   $items['admin/settings/twitter/signin'] = array(
@@ -22,8 +21,7 @@ function twitter_signin_menu() {
     'access arguments' => array('administer site configuration'),
     'file' => 'twitter_signin.pages.inc',
     'type' => MENU_LOCAL_TASK,
-    'weight' => 5
-    
+    'weight' => 5,
   );
 
   return $items;
@@ -39,7 +37,7 @@ function twitter_signin_block($op = 'list', $delta = 0, $edit = array()) {
       return $block;
     case 'view':
       global $user;
-      
+
       if (!$user->uid && _twitter_use_oauth()) {
         $block['subject'] = t('Sign in with Twitter');
         $block['content'] = twitter_signin_button();
@@ -63,7 +61,7 @@ function twitter_signin_user($op, &$edit, &$account, $category = NULL) {
 function twitter_signin_button() {
   $img_path = drupal_get_path('module', 'twitter_signin') . '/images/';
   $img = $img_path . variable_get('twitter_signin_button', 'Sign-in-with-Twitter-lighter-small.png');
-  
+
   return l(theme('image', $img, t('Sign in with Twitter')), 'twitter/redirect', array('html' => TRUE));
 }
 
@@ -95,22 +93,25 @@ function twitter_signin_form_alter(&$form, $form_state, $form_id) {
   if (!_twitter_use_oauth()) {
     return;
   }
-  
+
   if ($form_id == 'twitter_oauth_callback' && $_SESSION['twitter_oauth']['signin']) {
     $form['#submit'] = array_merge(array('twitter_signin_oauth_callback_submit'), $form['#submit']);
   }
-  
+
   if ($form_id == 'user_login' || $form_id == 'user_login_block') {
     $items = array();
     $items[] = twitter_signin_button();
-    
+
     $form['twitter_signin'] = array(
       '#value' => theme('item_list', $items),
     );
   }
   elseif ($form_id == 'user_register' && isset($_SESSION['twitter']['values'])) {
     $form['name']['#default_value'] = $_SESSION['twitter']['values']['screen_name'];
-    $form['auth_twitter'] = array('#type' => 'hidden', '#value' => $_SESSION['twitter']['values']['user_id']);
+    $form['auth_twitter'] = array(
+      '#type' => 'hidden',
+      '#value' => $_SESSION['twitter']['values']['user_id'],
+    );
   }
 }
 
@@ -165,7 +166,7 @@ function twitter_signin_oauth_callback_submit(&$form, &$form_state) {
       drupal_set_message(t('Please complete the following registration form to create your new account on %site', array('%site' => variable_get('site_name', ''))));
     }
   }
-  
+
   if (!$success) {
     $_SESSION['twitter']['values'] = $response;
     drupal_goto('user/register');
