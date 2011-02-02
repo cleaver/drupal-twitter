@@ -10,7 +10,7 @@ function twitter_admin_form($form, &$form_state) {
     '#type' => 'fieldset',
     '#title' => t('OAuth Settings'),
     '#description' => t(''),
-    '#access' => module_exists('oauth'),
+    '#access' => module_exists('oauth_common'),
     '#description' => t('To enable OAuth based access for twitter, you must <a href="@url">register your application</a> with twitter and add the provided keys here.', array('@url' => 'https://twitter.com/apps/new')),
   );
 
@@ -69,9 +69,9 @@ function twitter_user_settings($account) {
   // management gets an overhaul.
   $twitter_accounts = twitter_twitter_accounts($account);
   if (!empty($twitter_accounts)) {
-    $output .= drupal_get_form('twitter_account_list_form', $twitter_accounts);
+    $output .= drupal_render(drupal_get_form('twitter_account_list_form', $twitter_accounts));
   }
-  $output .= drupal_get_form('twitter_account_form', $account);
+  $output .= drupal_render(drupal_get_form('twitter_account_form', $account));
 
   return $output;
 }
@@ -365,7 +365,7 @@ function twitter_account_form_submit($form, &$form_state) {
  * @see http://drupal.org/node/1354
  */
 function twitter_account_oauth_validate($form, &$form_state) {
-  module_load_include('lib.php', 'oauth');
+  module_load_include('lib.php', 'oauth_common');
   module_load_include('lib.php', 'twitter');
 
   $key = variable_get('twitter_consumer_key', '');
@@ -414,7 +414,7 @@ function twitter_oauth_callback_validate($form, &$form_state) {
     form_set_error('oauth_token', t('Invalid OAuth token.'));
   }
 
-  module_load_include('lib.php', 'oauth');
+  module_load_include('lib.php', 'oauth_common');
   module_load_include('lib.php', 'twitter');
   module_load_include('inc', 'twitter');
 

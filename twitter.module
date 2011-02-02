@@ -226,10 +226,10 @@ function twitter_twitter_accounts($account) {
   if (user_access('use global twitter account')) {
     $sql .= " OR is_global=1";
   }
-  $results = db_query($sql, array(':uid' => $account->uid));
+  $result = db_query($sql, array(':uid' => $account->uid));
 
-  while ($row = db_fetch_array($results)) {
-    $key = $row['twitter_uid'];
+  foreach ($result as $row) {
+    $key = $row->twitter_uid;
     $twitter_accounts[] = twitter_account_load($key);
   }
   return $twitter_accounts;
