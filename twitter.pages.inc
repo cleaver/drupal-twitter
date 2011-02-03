@@ -118,23 +118,19 @@ function _twitter_account_list_row($account) {
   );
 
   $form['image'] = array(
-    '#type' => 'markup',
-    '#value' => theme('image', array('path' => $account->profile_image_url, 'width' => '', 'height' => '', 'alt' => array(), 'title' => FALSE)),
+    '#markup' => theme('image', array('path' => $account->profile_image_url, 'width' => '', 'height' => '', 'alt' => array(), 'title' => FALSE)),
   );
 
   $form['visible_name'] = array(
-    '#type' => 'markup',
-    '#value' => l($account->screen_name, 'http://www.twitter.com/' . $account->screen_name),
+    '#markup' => l($account->screen_name, 'http://www.twitter.com/' . $account->screen_name),
   );
 
   $form['description'] = array(
-    '#type' => 'markup',
-    '#value' => filter_xss($account->description),
+    '#markup' => filter_xss($account->description),
   );
 
   $form['protected'] = array(
-    '#type' => 'markup',
-    '#value' => empty($account->protected) ? t('No') : t('Yes'),
+    '#markup' => empty($account->protected) ? t('No') : t('Yes'),
   );
 
   if (user_access('import own tweets')) { // Here we use user_access('import own tweets') to check permission instead of user_access('import own tweets', $account->uid) is because we allow roles with sufficient permission to overwrite the user's import settings.
@@ -143,7 +139,6 @@ function _twitter_account_list_row($account) {
       '#default_value' => user_access('import own tweets') ? $account->import : '',
     );
   }
-
 
   $form['delete'] = array(
     '#type' => 'checkbox',
@@ -362,8 +357,8 @@ function twitter_account_form_submit($form, &$form_state) {
 }
 
 /**
- * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * If OAuth is enabled, intercept submission of 'Add Account' form on
+ * user/%/edit/twitter page and redirect to Twitter for auth.
  */
 function twitter_account_oauth_validate($form, &$form_state) {
   module_load_include('lib.php', 'oauth_common');
@@ -379,27 +374,35 @@ function twitter_account_oauth_validate($form, &$form_state) {
   drupal_goto($twitter->get_authorize_url($token));
 }
 
+/**
+ * @TODO This code should probably be reviewed.
+ *
+ * Wrapper to calll drupal_form_submit() which wasn't required in D6.
+ */
+function twitter_oauth_callback() {
+  $form_state['values']['oauth_token'] = $_GET['oauth_token'];
+  drupal_form_submit('twitter_oauth_callback_form', $form_state);
+}
 
 /**
- * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * Form builder function. In D6 this form was built in response to the
+ * oauth return request from Twitter, and the setting of
+ * $form['#post'] seems to have caused the form to be validated and
+ * processed.
  */
-function twitter_oauth_callback($form, &$form_state) {
+function twitter_oauth_callback_form($form, &$form_state) {
   $form['#post']['oauth_token'] = $_GET['oauth_token'];
-
   $form['oauth_token'] = array(
     '#type' => 'hidden',
     '#default_value' => $_GET['oauth_token'],
   );
-
   return $form;
 }
 
 /**
- * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * Validate results from Twitter OAuth return request.
  */
-function twitter_oauth_callback_validate($form, &$form_state) {
+function twitter_oauth_callback_form_validate($form, &$form_state) {
   $key = variable_get('twitter_consumer_key', '');
   $secret = variable_get('twitter_consumer_secret', '');
 
@@ -425,10 +428,17 @@ function twitter_oauth_callback_validate($form, &$form_state) {
 }
 
 /**
- * @todo Please document this function.
- * @see http://drupal.org/node/1354
+ * Handle a Twitter OAuth return request and store the account creds
+ * in the DB. Redirects to user/%/edit/twitter
+ *
+ * @TODO Redirect better. 
+ *
+ * I don't much like the use of drupal_goto() here as it might
+ * interfere with other modules trying to piggyback on the form
+ * submission, but setting $form['redirect'] was leaving us at the
+ * twitter/oauth URL.
  */
-function twitter_oauth_callback_submit(&$form, &$form_state) {
+function twitter_oauth_callback_form_submit(&$form, &$form_state) {
   $key = variable_get('twitter_consumer_key', '');
   $secret = variable_get('twitter_consumer_secret', '');
   $response = $form_state['twitter_oauth']['response'];
@@ -437,6 +447,14 @@ function twitter_oauth_callback_submit(&$form, &$form_state) {
   $account = $twitter->users_show($response['screen_name']);
   $account->set_auth($response);
   twitter_account_save($account, TRUE);
-  $form_state['redirect'] = $form_state['twitter_oauth']['destination'];
+
   $form['#programmed'] = FALSE;
+
+  global $user ;
+  if ( $user->uid ) {
+    $form_state['redirect'] = url('user/' . $user->uid . '/edit/twitter');
+  }
+  // redirect isn't firing - because we're using drupal_submit_form()?
+  // - so adding drupal_goto() here (but not liking it).
+  drupal_goto('user/' . $user->uid . '/edit/twitter');
 }
