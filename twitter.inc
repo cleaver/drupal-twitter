@@ -59,15 +59,14 @@ function twitter_account_save($twitter_user, $save_auth = FALSE, $account = NULL
  */
 function twitter_account_load($id) {
   module_load_include('lib.php', 'twitter');
-
-  $values = db_fetch_array(db_query("SELECT * FROM {twitter_account} WHERE twitter_uid = :twitter_uid", array(':twitter_uid' => $id)));
+  $result = db_query("SELECT * FROM {twitter_account} WHERE twitter_uid = :twitter_uid", array(':twitter_uid' => $id))->fetch();
+  $values = (array)$result;
   $values['id'] = $values['twitter_uid'];
   $account = new TwitterUser($values);
   $account->set_auth($values);
   $account->uid = $values['uid'];
   $account->import = $values['import'];
   $account->is_global = $values['is_global'];
-
   return $account;
 }
 
@@ -141,11 +140,11 @@ function twitter_fetch_user_timeline($id) {
  *   Optional string with the user name.
  */
 function twitter_user_delete($twitter_uid, $screen_name = NULL) {
-  $sql = "DELETE FROM {twitter_account} WHERE twitter_uid = %d";
-  $args = array($twitter_uid);
+  $sql = "DELETE FROM {twitter_account} WHERE twitter_uid = :twitter_uid";
+  $args = array(':twitter_uid' => $twitter_uid);
   if (!empty($screen_name)) {
-    $sql .= " AND screen_name = '%s'";
-    $args[] = $screen_name;
+    $sql .= " AND screen_name = :screen_name";
+    $args[':screen_name'] = $screen_name;
   }
   db_query($sql, $args);
 }

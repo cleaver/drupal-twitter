@@ -133,8 +133,8 @@ function twitter_cron() {
   // Pull up a list of Twitter accounts that are flagged for updating,
   // sorted by how long it's been since we last updated them. This ensures
   // that the most out-of-date accounts get updated first.
-  $results = db_query_range("SELECT twitter_uid FROM {twitter_account} WHERE import = :import ORDER BY last_refresh ASC", array(':import' => 1));
-  while ($account = db_fetch_object($results)) {
+  $result = db_query_range("SELECT twitter_uid FROM {twitter_account} WHERE import = :import ORDER BY last_refresh ASC", 0, 20, array(':import' => 1));
+  foreach ($result as $account) {
     twitter_fetch_user_timeline($account->twitter_uid);
   }
 
@@ -239,7 +239,7 @@ function twitter_twitter_accounts($account) {
  * Detect whether we should use oauth. This can probably just go now :)
  */
 function _twitter_use_oauth() {
-  if (!module_exists('oauth')) {
+  if (!module_exists('oauth_common')) {
     return FALSE;
   }
 

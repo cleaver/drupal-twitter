@@ -237,7 +237,7 @@ class Twitter {
     }
 
     $response = drupal_http_request($url, $headers, $method, $data);
-    if (!$response->error) {
+    if (!isset($response->error)) {
       return $response->data;
     }
     else {
@@ -483,7 +483,7 @@ class TwitterUser {
     }
     $this->utc_offset = $values['utc_offset'];
 
-    if ($values['status']) {
+    if (isset($values['status'])) {
       $this->status = new TwitterStatus($values['status']);
     }
   }
@@ -493,7 +493,9 @@ class TwitterUser {
   }
 
   public function set_auth($values) {
-    $this->password = $values['password'];
+    if ( isset($values['password']) ) {
+      $this->password = $values['password'];
+    }
     $this->oauth_token = $values['oauth_token'];
     $this->oauth_token_secret = $values['oauth_token_secret'];
   }
