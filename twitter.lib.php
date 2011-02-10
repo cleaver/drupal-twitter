@@ -258,7 +258,15 @@ class Twitter {
 
     switch ($format) {
       case 'json':
-        return json_decode($response, TRUE);
+        if (version_compare(PHP_VERSION, '5.3.0', '<')) {
+          // in_reply_to_id ?
+          // ALL integers?
+          $response = preg_replace('/"id":([0-9]*)/', '"id":"\1"', $response);
+          return json_decode($response, TRUE);
+        }
+        else {
+          return json_decode($response, TRUE, 512, JSON_BIGINT_AS_STRING);
+        }
     }
   }
 
