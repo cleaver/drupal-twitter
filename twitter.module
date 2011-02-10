@@ -154,13 +154,13 @@ function twitter_cron() {
  */
 function twitter_filter_info() {
   $filters['twitter_username'] = array(
-    'name' => t('Twitter @username converter'),
+    'title' => t('Twitter @username converter'),
     'description' => t('Converts Twitter-style @usernames into links to Twitter account pages.'),
     'process callback' => 'twitter_link_filter',
     'tips callback' => 'twitter_filter_tip_username',
   );
   $filters['twitter_hashtag'] = array(
-    'name' => t('Twitter #hashtag converter'),
+    'title' => t('Twitter #hashtag converter'),
     'description' => t('Converts Twitter-style #hashtags into links to hashtags.org.'),
     'process callback' => 'twitter_link_filter',
     'tips callback' => 'twitter_filter_tip_hashtag',
