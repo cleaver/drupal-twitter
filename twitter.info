@@ -11,4 +11,4 @@ files[] = twitter.pages.inc
 files[] = twitter.views.inc
 files[] = twitter.views_default.inc
 files[] = twitter_views_field_handlers.inc
-configure = admin/config/twitter
+configure = admin/config/services/twitter

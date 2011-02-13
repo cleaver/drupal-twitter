@@ -16,16 +16,17 @@ function twitter_menu() {
     'file' => 'twitter.pages.inc',
   );
 
-  $items['admin/config/twitter'] = array(
-    'title' => 'Twitter setup',
-    'description' => 'Twitter module settings',
+  $items['admin/config/services/twitter'] = array(
+    'title' => 'Twitter',
+    'description' => 'Configure integration with Twitter (and compatible) API services.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('twitter_admin_form'),
     'access arguments' => array('administer site configuration'),
     'file' => 'twitter.pages.inc',
+    'type' => MENU_NORMAL_ITEM,
   );
 
-  $items['admin/config/twitter/default'] = array(
+  $items['admin/config/services/twitter/default'] = array(
     'title' => 'Twitter',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
