@@ -18,7 +18,7 @@ function twitter_admin_form($form, &$form_state) {
   $form['oauth']['callback_url'] = array(
     '#type' => 'item',
     '#title' => t('Callback URL'),
-    '#value' => url('twitter/oauth', array('absolute' => TRUE)),
+    '#markup' => url('twitter/oauth', array('absolute' => TRUE)),
   );
 
   $form['oauth']['twitter_consumer_key'] = array(
