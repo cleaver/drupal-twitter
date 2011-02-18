@@ -26,12 +26,11 @@ function twitter_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
 
-  $items['user/%user_category/edit/twitter'] = array(
+  $items['user/%user/edit/twitter'] = array(
     'title' => 'Twitter accounts',
     'page callback' => 'twitter_user_settings',
     'page arguments' => array(1),
     'access arguments' => array('add twitter accounts'),
-    'load arguments' => array('%map', '%index'),
     'weight' => 10,
     'file' => 'twitter.pages.inc',
     'type' => MENU_LOCAL_TASK,
@@ -54,32 +53,16 @@ function twitter_permission() {
   return array(
     'add twitter accounts' => array(
       'title' => t('Add Twitter accounts'),
-      'description' => t('Add Twitter accounts.'),
     ),
     'use global twitter account' => array(
       'title' => t('Use global Twitter account'),
       'description' => t('Use the site global Twitter account.'),
     ),
     'make twitter accounts global' => array(
-      'title' => t('make twitter accounts global'),
-      'description' => t('Assign a Twitter account as the site global account.'),
+      'title' => t('Assign a Twitter account as the site global account.'),
     ),
     'import own tweets' => array(
-      'title' => t('import own tweets'),
-      'description' => t('Import own tweets to the site.'),
-    ),
-  );
-}
-
-/**
- * Implements hook_user_categories().
- */
-function twitter_user_categories() {
-  return array(
-    array(
-      'name' => 'twitter',
-      'title' => 'Twitter accounts',
-      'weight' => 3,
+      'title' => t('Import own tweets to the site.'),
     ),
   );
 }
@@ -141,7 +124,6 @@ function twitter_cron() {
   }
 }
 
-
 /**
  * Implements hook_filter_info().
  */
@@ -194,15 +176,13 @@ function twitter_link_filter($text, $prefix = '@', $destination = 'http://twitte
 }
 
 /**
- * Get a list of twitter accounts available to the current user.
- *
- * @return Array containing TwitterAccount objects
+ * Implements hook_user_load().
  */
-function twitter_get_user_accounts($uid) {
-  $drupal_user = user_load($uid);
-  return module_invoke_all('twitter_accounts', $drupal_user);
+function twitter_user_load($accounts) {
+  foreach ($accounts as $uid => $account) {
+    $accounts[$uid]->twitter_accounts = module_invoke_all('twitter_accounts', $account);
+  }
 }
-
 
 /**
  * An implementation of hook_twitter_accounts. We want to move this into a
@@ -241,17 +221,11 @@ function twitter_twitter_accounts($account) {
  * Detect whether we should use oauth. This can probably just go now :)
  */
 function _twitter_use_oauth() {
-  if (!module_exists('oauth_common')) {
-    return FALSE;
-  }
-
-  return (variable_get('twitter_consumer_key', '') && variable_get('twitter_consumer_secret', ''));
+  return module_exists('oauth_common') && variable_get('twitter_consumer_key', '') && variable_get('twitter_consumer_secret', '');
 }
 
 /**
  * Implements hook_views_api().
- *
- * Notifies the Views module that we're compatible with a particular API revision.
  */
 function twitter_views_api() {
   return array('api' => 2);

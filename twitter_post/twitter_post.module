@@ -111,13 +111,11 @@ function twitter_post_form($account = NULL) {
   drupal_add_js(drupal_get_path('module', 'twitter') . '/twitter.js');
 
   if (empty($account)) {
-    global $user;
-    $account = $user;
+    $account = user_load($GLOBALS['user']->uid);
   }
 
-  $twitter_accounts = twitter_get_user_accounts($account->uid);
   $options = array();
-  foreach ($twitter_accounts as $twitter_account) {
+  foreach ($account->twitter_accounts as $twitter_account) {
     $options[$twitter_account->id] = $twitter_account->screen_name;
   }
 

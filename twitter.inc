@@ -137,7 +137,7 @@ function twitter_fetch_user_timeline($id) {
  * @param $screen_name
  *   Optional string with the user name.
  */
-function twitter_user_delete($twitter_uid, $screen_name = NULL) {
+function twitter_account_delete($twitter_uid, $screen_name = NULL) {
   $query = db_delete('twitter_account');
   $query->condition('twitter_uid', $twitter_uid);
   if (!empty($screen_name)) {
