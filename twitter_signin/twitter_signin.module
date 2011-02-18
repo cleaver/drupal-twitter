@@ -5,8 +5,6 @@
  * Implements hook_menu().
  */
 function twitter_signin_menu() {
-  $items = array();
-
   $items['twitter/redirect'] = array(
     'title' => 'Twitter Redirect',
     'page callback' => 'twitter_signin_redirect',
@@ -14,7 +12,7 @@ function twitter_signin_menu() {
     'type' => MENU_CALLBACK,
   );
 
-  $items['admin/config/twitter/signin'] = array(
+  $items['admin/config/services/twitter/signin'] = array(
     'title' => 'Sign-in',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('twitter_signin_admin_settings'),
@@ -49,34 +47,22 @@ function twitter_signin_block_view($delta) {
 }
 
 /**
- * Implements hook_block().
- */
-function twitter_signin_block_OLD($op = 'list', $delta = 0, $edit = array()) { }
-
-/**
  * Implements hook_user_insert().
  */
 function twitter_signin_user_insert(&$edit, $account, $category) {
-  if (TRUE && isset($_SESSION['twitter']['values'])) {
+  if (isset($_SESSION['twitter']['values'])) {
     unset($_SESSION['twitter']);
   }
 }
 
 /**
- * Implements hook_user().
- */
-function twitter_signin_user_OLD($op, &$edit, &$account, $category = NULL) { }
-
-/**
  * returns an image link for signing in with twitter
  */
 function twitter_signin_button() {
-  $img_path = drupal_get_path('module', 'twitter_signin') . '/images/';
-  $img = $img_path . variable_get('twitter_signin_button', 'Sign-in-with-Twitter-lighter-small.png');
+  $img = drupal_get_path('module', 'twitter_signin') . '/images/' . variable_get('twitter_signin_button', 'Sign-in-with-Twitter-lighter-small.png');
 
-  return l(theme('image', array('path' => $img, 'width' => t('Sign in with Twitter'))), 'twitter/redirect', array('html' => TRUE));
+  return l(theme('image', array('path' => $img, 'alt' => t('Sign in with Twitter'))), 'twitter/redirect', array('html' => TRUE));
 }
-
 
 /**
  * Submit handler for twitter signin
