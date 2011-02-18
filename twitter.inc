@@ -51,7 +51,7 @@ function twitter_account_save($twitter_user, $save_auth = FALSE, $account = NULL
  * @param $id
  *   Twitter UID
  *
- * @return 
+ * @return
  *   TwitterUser object
  *
  * @todo How well does this handle the Twitter UID not being in the
@@ -59,8 +59,7 @@ function twitter_account_save($twitter_user, $save_auth = FALSE, $account = NULL
  */
 function twitter_account_load($id) {
   module_load_include('lib.php', 'twitter');
-  $result = db_query("SELECT * FROM {twitter_account} WHERE twitter_uid = :twitter_uid", array(':twitter_uid' => $id))->fetch();
-  $values = (array)$result;
+  $values = db_query("SELECT * FROM {twitter_account} WHERE twitter_uid = :twitter_uid", array(':twitter_uid' => $id))->fetchAssoc();
   $values['id'] = $values['twitter_uid'];
   $account = new TwitterUser($values);
   $account->set_auth($values);
@@ -120,14 +119,13 @@ function twitter_fetch_user_timeline($id) {
   if (count($statuses) > 0) {
     twitter_account_save($statuses[0]->user);
   }
-  // TODO Please review the conversion of this statement to the D7 database API syntax.
-  /* db_query("UPDATE {twitter_account} SET last_refresh = %d WHERE twitter_uid=%d", REQUEST_TIME, $account->id) */
+
   db_update('twitter_account')
-  ->fields(array(
-    'last_refresh' => REQUEST_TIME,
-  ))
-  ->condition('twitter_uid', $account->id)
-  ->execute();
+    ->fields(array(
+      'last_refresh' => REQUEST_TIME,
+    ))
+    ->condition('twitter_uid', $account->id)
+    ->execute();
 }
 
 /**
@@ -140,11 +138,10 @@ function twitter_fetch_user_timeline($id) {
  *   Optional string with the user name.
  */
 function twitter_user_delete($twitter_uid, $screen_name = NULL) {
-  $sql = "DELETE FROM {twitter_account} WHERE twitter_uid = :twitter_uid";
-  $args = array(':twitter_uid' => $twitter_uid);
+  $query = db_delete('twitter_account');
+  $query->condition('twitter_uid', $twitter_uid);
   if (!empty($screen_name)) {
-    $sql .= " AND screen_name = :screen_name";
-    $args[':screen_name'] = $screen_name;
+    $query->condition('screen_name', $screen_name);
   }
-  db_query($sql, $args);
+  $query->execute();
 }

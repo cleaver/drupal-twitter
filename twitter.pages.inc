@@ -1,31 +1,25 @@
 <?php
 
 /**
- *
+ * Form builder; Twitter settings form.
  */
 function twitter_admin_form($form, &$form_state) {
-  $form = array();
-
   $form['oauth'] = array(
     '#type' => 'fieldset',
     '#title' => t('OAuth Settings'),
-    '#description' => t(''),
     '#access' => module_exists('oauth_common'),
     '#description' => t('To enable OAuth based access for twitter, you must <a href="@url">register your application</a> with twitter and add the provided keys here.', array('@url' => 'https://twitter.com/apps/new')),
   );
-
   $form['oauth']['callback_url'] = array(
     '#type' => 'item',
     '#title' => t('Callback URL'),
     '#markup' => url('twitter/oauth', array('absolute' => TRUE)),
   );
-
   $form['oauth']['twitter_consumer_key'] = array(
     '#type' => 'textfield',
     '#title' => t('OAuth Consumer key'),
     '#default_value' => variable_get('twitter_consumer_key', NULL),
   );
-
   $form['oauth']['twitter_consumer_secret'] = array(
     '#type' => 'textfield',
     '#title' => t('OAuth Consumer secret'),
@@ -37,20 +31,16 @@ function twitter_admin_form($form, &$form_state) {
     '#title' => t('Twitter import'),
     '#description' => t('Import and display the Twitter statuses of site users who have entered their Twitter account information.'),
   );
-
   $form['import']['twitter_import'] = array(
     '#type' => 'checkbox',
     '#title' => t('Import Twitter statuses'),
     '#default_value' => variable_get('twitter_import', TRUE),
   );
-
-  $periods = array(0 => t('Never'));
-  $periods += drupal_map_assoc(array(604800, 2419200, 7257600, 31449600), 'format_interval');
   $form['import']['twitter_expire'] = array(
     '#type' => 'select',
     '#title' => t('Delete old statuses'),
     '#default_value' => variable_get('twitter_expire', 0),
-    '#options' => $periods,
+    '#options' => array(0 => t('Never')) + drupal_map_assoc(array(604800, 2592000, 7776000, 31536000), 'format_interval'),
   );
 
   return system_settings_form($form);
@@ -117,7 +107,7 @@ function _twitter_account_list_row($account) {
   );
 
   $form['image'] = array(
-    '#markup' => theme('image', array('path' => $account->profile_image_url, 'width' => '', 'height' => '', 'alt' => array(), 'title' => FALSE)),
+    '#markup' => theme('image', array('path' => $account->profile_image_url)),
   );
 
   $form['visible_name'] = array(
@@ -132,7 +122,10 @@ function _twitter_account_list_row($account) {
     '#markup' => empty($account->protected) ? t('No') : t('Yes'),
   );
 
-  if (user_access('import own tweets')) { // Here we use user_access('import own tweets') to check permission instead of user_access('import own tweets', $account->uid) is because we allow roles with sufficient permission to overwrite the user's import settings.
+  // Here we use user_access('import own tweets') to check permission instead
+  // of user_access('import own tweets', $account) is because we allow roles
+  // with sufficient permission to overwrite the user's import settings.
+  if (user_access('import own tweets')) {
     $form['import'] = array(
       '#type' => 'checkbox',
       '#default_value' => user_access('import own tweets') ? $account->import : '',
@@ -258,11 +251,9 @@ function twitter_user_make_global_submit($form, &$form_state) {
   // TODO Please review the conversion of this statement to the D7 database API syntax.
   /* db_query("UPDATE {twitter_account} SET is_global = (1 - is_global) WHERE twitter_uid = %d", $form_state['values']['twitter_uid']) */
   db_update('twitter_account')
-  ->fields(array(
-    'is_global' =>  (1 - is_global),
-  ))
-  ->condition('twitter_uid', $form_state['values']['twitter_uid'])
-  ->execute();
+    ->expression('is_global', '(1 - is_global)')
+    ->condition('twitter_uid', $form_state['values']['twitter_uid'])
+    ->execute();
 
   $form_state['redirect'] = 'user/' . $form_state['values']['uid'] . '/edit/twitter';
 }
@@ -430,7 +421,7 @@ function twitter_oauth_callback_form_validate($form, &$form_state) {
  * Handle a Twitter OAuth return request and store the account creds
  * in the DB. Redirects to user/%/edit/twitter
  *
- * @TODO Redirect better. 
+ * @TODO Redirect better.
  *
  * I don't much like the use of drupal_goto() here as it might
  * interfere with other modules trying to piggyback on the form

@@ -4,8 +4,6 @@
  * Implements hook_meu().
  */
 function twitter_menu() {
-  $items = array();
-
   $items['twitter/oauth'] = array(
     'title' => 'Twitter',
     'access callback' => TRUE,
@@ -22,9 +20,7 @@ function twitter_menu() {
     'page arguments' => array('twitter_admin_form'),
     'access arguments' => array('administer site configuration'),
     'file' => 'twitter.pages.inc',
-    'type' => MENU_NORMAL_ITEM,
   );
-
   $items['admin/config/services/twitter/default'] = array(
     'title' => 'Twitter',
     'type' => MENU_DEFAULT_LOCAL_TASK,
@@ -40,14 +36,12 @@ function twitter_menu() {
     'file' => 'twitter.pages.inc',
     'type' => MENU_LOCAL_TASK,
   );
-
   $items['user/%user/edit/twitter/global/%'] = array(
     'title' => 'Twitter accounts',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('twitter_user_make_global', 1, 5),
     'access arguments' => array('make twitter accounts global'),
     'file' => 'twitter.pages.inc',
-    'type' => MENU_CALLBACK,
   );
 
   return $items;
@@ -141,8 +135,6 @@ function twitter_cron() {
 
   // Nuke old statuses.
   if ($age = variable_get('twitter_expire', 0)) {
-    // TODO Please review the conversion of this statement to the D7 database API syntax.
-    /* db_query('DELETE FROM {twitter} WHERE created_time < %d', REQUEST_TIME - $age) */
     db_delete('twitter')
       ->condition('created_time', REQUEST_TIME - $age, '<')
       ->execute();
@@ -223,16 +215,25 @@ function twitter_twitter_accounts($account) {
 
   $twitter_accounts = array();
 
-  $sql = "SELECT twitter_uid FROM {twitter_account} WHERE uid = :uid";
+  $query = db_select('twitter_account', 'ta');
+  $query->addField('ta', 'twitter_uid');
+  $query->condition('ta.uid', $account->uid);
   if (user_access('use global twitter account')) {
-    $sql .= " OR is_global=1";
+    $or = db_or();
+    $or->condition('ta.uid', $account->uid);
+    $or->condition('ta.is_global', 1);
+    $query->condition($or);
   }
-  $result = db_query($sql, array(':uid' => $account->uid));
+  else {
+    $query->condition('ta.uid', $account->uid);
+  }
 
-  foreach ($result as $row) {
+  $twitter_uids = $query->execute()->fetchCol();
+  foreach ($twitter_uids as $twitter_uid) {
     $key = $row->twitter_uid;
-    $twitter_accounts[] = twitter_account_load($key);
+    $twitter_accounts[] = twitter_account_load($twitter_uid);
   }
+
   return $twitter_accounts;
 }
 
