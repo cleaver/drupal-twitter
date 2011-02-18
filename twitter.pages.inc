@@ -5,11 +5,28 @@
  * Form builder; Twitter settings form.
  */
 function twitter_admin_form($form, &$form_state) {
+  $form['twitter_import'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Import and display the Twitter statuses of site users who have entered their Twitter account information.'),
+    '#default_value' => variable_get('twitter_import', 1),
+  );
+  $form['twitter_expire'] = array(
+    '#type' => 'select',
+    '#title' => t('Delete old statuses'),
+    '#default_value' => variable_get('twitter_expire', 0),
+    '#options' => array(0 => t('Never')) + drupal_map_assoc(array(604800, 2592000, 7776000, 31536000), 'format_interval'),
+    '#states' => array(
+      'visible' => array(
+        ':input[name=twitter_import]' => array('checked' => TRUE),
+      ),
+    ),
+  );
+
   $form['oauth'] = array(
     '#type' => 'fieldset',
     '#title' => t('OAuth Settings'),
     '#access' => module_exists('oauth_common'),
-    '#description' => t('To enable OAuth based access for twitter, you must <a href="@url">register your application</a> with twitter and add the provided keys here.', array('@url' => 'https://twitter.com/apps/new')),
+    '#description' => t('To enable OAuth based access for twitter, you must <a href="@url">register your application</a> with Twitter and add the provided keys here.', array('@url' => 'https://twitter.com/apps/new')),
   );
   $form['oauth']['callback_url'] = array(
     '#type' => 'item',
@@ -27,23 +44,6 @@ function twitter_admin_form($form, &$form_state) {
     '#default_value' => variable_get('twitter_consumer_secret', NULL),
   );
 
-  $form['import'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Twitter import'),
-    '#description' => t('Import and display the Twitter statuses of site users who have entered their Twitter account information.'),
-  );
-  $form['import']['twitter_import'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Import Twitter statuses'),
-    '#default_value' => variable_get('twitter_import', TRUE),
-  );
-  $form['import']['twitter_expire'] = array(
-    '#type' => 'select',
-    '#title' => t('Delete old statuses'),
-    '#default_value' => variable_get('twitter_expire', 0),
-    '#options' => array(0 => t('Never')) + drupal_map_assoc(array(604800, 2592000, 7776000, 31536000), 'format_interval'),
-  );
-
   return system_settings_form($form);
 }
 
@@ -54,15 +54,11 @@ function twitter_admin_form($form, &$form_state) {
 function twitter_user_settings($account) {
   module_load_include('inc', 'twitter');
 
-  $output = '';
-  // This is directly calling a hook implementation, which is bad and naughty,
-  // but oh well. We'll fix this in the next reshuffling when user account
-  // management gets an overhaul.
-  $twitter_accounts = twitter_twitter_accounts($account);
-  if (!empty($twitter_accounts)) {
-    $output .= drupal_render(drupal_get_form('twitter_account_list_form', $twitter_accounts));
+  $output = array();
+  if (!empty($account->twitter_accounts)) {
+    $output['list_form'] = drupal_get_form('twitter_account_list_form', $account->twitter_accounts);
   }
-  $output .= drupal_render(drupal_get_form('twitter_account_form', $account));
+  $output['form'] = drupal_get_form('twitter_account_form', $account);
 
   return $output;
 }
@@ -206,7 +202,7 @@ function twitter_account_list_form_submit($form, &$form_state) {
       twitter_account_save($account);
     }
     else {
-      twitter_user_delete($account['id'], $account['screen_name']);
+      twitter_account_delete($account['id'], $account['screen_name']);
     }
   }
 }
@@ -249,8 +245,6 @@ function twitter_user_make_global($form, $form_state, $account, $twitter_uid) {
  * @see http://drupal.org/node/1354
  */
 function twitter_user_make_global_submit($form, &$form_state) {
-  // TODO Please review the conversion of this statement to the D7 database API syntax.
-  /* db_query("UPDATE {twitter_account} SET is_global = (1 - is_global) WHERE twitter_uid = %d", $form_state['values']['twitter_uid']) */
   db_update('twitter_account')
     ->expression('is_global', '(1 - is_global)')
     ->condition('twitter_uid', $form_state['values']['twitter_uid'])
